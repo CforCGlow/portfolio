@@ -10,19 +10,18 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <nav className="nav">
-          <a className="logo" href="/">Kazim Akeeb Onik</a>
+          <a className="logo" href="/"><span className="mark">KO</span> Kazim Akeeb Onik</a>
           <div className="links">
             <a className="link" href="/#experience">Experience</a>
             <a className="link" href="/#community">Community</a>
             <a className="link" href="/#skills">Skills</a>
             <a className="link" href="/#projects">Projects</a>
             <a className="link" href="/blog">Blog</a>
-            <a className="link" href="/admin">Admin</a>
-            <a className="link" href="/#contact">Contact</a>
+            <a className="cta" href="/#contact">Hire Me</a>
           </div>
         </nav>
         <div className="container">{children}</div>
-        <footer className="footer">© {new Date().getFullYear()} Kazim Akeeb Onik · Southeast University CSE · kazimakeebonik@gmail.com</footer>
+        <footer className="footer"><strong>Kazim Akeeb Onik</strong> · Southeast University CSE · CGPA 3.81<br />kazimakeebonik@gmail.com · +8801774445379 · linkedin.com/in/kazim-akeeb-onik</footer>
       </body>
     </html>
   );
