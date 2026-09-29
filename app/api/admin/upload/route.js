@@ -21,7 +21,12 @@ export async function POST(req) {
 
     const db = getSupabaseAdmin();
     const { error } = await db.storage.from("blog-images").upload(name, buf, { contentType: file.type, upsert: false });
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) {
+      const msg = /bucket not found/i.test(error.message)
+        ? "Storage bucket missing. Run supabase/migration_blog_images.sql in the Supabase SQL Editor, then retry."
+        : error.message;
+      return NextResponse.json({ error: msg }, { status: 500 });
+    }
 
     const { data } = db.storage.from("blog-images").getPublicUrl(name);
     return NextResponse.json({ url: data.publicUrl });
