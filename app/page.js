@@ -1,4 +1,4 @@
-import { profile, experiences, volunteering, achievements, skills, projects } from "@/lib/data";
+import { profile, experiences, volunteering, skills, projects } from "@/lib/data";
 import ContactForm from "@/components/ContactForm";
 
 export default function Home() {
@@ -17,18 +17,10 @@ export default function Home() {
             <a className="btn-ghost" href={profile.socials.linkedin} target="_blank">LinkedIn ↗</a>
             <a className="btn-ghost" href="https://www.facebook.com/cglow17" target="_blank">Facebook ↗</a>
           </div>
-          <div className="stats">
-            <div className="stat"><strong>Vice Chair</strong><br /><span>IEEE CS SEU SBC</span></div>
-            <div className="stat"><strong>500+</strong><br /><span>Event participants</span></div>
-            <div className="stat"><strong>5+</strong><br /><span>Leadership roles</span></div>
-            <div className="stat"><strong>ICPC</strong><br /><span>2024 Preliminary</span></div>
-          </div>
         </div>
         <div className="hero-photo">
           <div className="photo-wrap">
             <img src="/profile.jpg" alt="Kazim Akeeb Onik" className="profile-img" />
-            <span className="float-badge b1">★ Best Volunteer 2024</span>
-            <span className="float-badge b2">Co-Founder @ One Percent</span>
           </div>
           <p className="hero-contact">
             <a href={`mailto:${profile.email}`}>{profile.email}</a><br />{profile.phone}
@@ -70,21 +62,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section">
-        <div className="card" style={{ margin: 0 }}>
-          <div className="sec-head">
-            <div className="sec-eyebrow">Proof</div>
-            <h2>Achievements</h2>
-          </div>
-          {achievements.map((a, i) => (
-            <div key={i} className="ach">
-              <span className="icon">🏆</span>
-              <div><strong>{a.title}</strong> <span className="muted">· {a.org}</span><br /><span className="muted">{a.description}</span></div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <section id="skills" className="section">
         <div className="sec-head">
           <div className="sec-eyebrow">Stack</div>
@@ -105,7 +82,7 @@ export default function Home() {
         <div className="sec-head">
           <div className="sec-eyebrow">Work</div>
           <h2>Projects</h2>
-          <p>Small but real — LigaPro is a full Next.js + Supabase build, One Percent is a live business.</p>
+          <p>Selected builds — full-stack, team, and client work.</p>
         </div>
         <div className="grid2">
           {projects.map((p, i) => (

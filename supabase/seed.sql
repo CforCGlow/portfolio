@@ -43,7 +43,8 @@ insert into skills (category, items) values
   ('Productivity', array['MS Office', 'Google Workspace', 'Google Colab']);
 
 insert into projects (title, description, tech, github_url, live_url, featured) values
-  ('SEU LigaPro – Football Management System', 'Next.js + Supabase league portal for fixtures, standings, clubs.', array['Next.js', 'Supabase', 'PostgreSQL'], 'https://github.com/CforCGlow/weblabproject', '', true),
+  ('SEU LigaPro – Football Management System', 'Next.js + Supabase league portal for fixtures, standings, clubs. Full-stack build.', array['Next.js', 'Supabase', 'PostgreSQL'], 'https://github.com/CforCGlow/weblabproject', '', true),
+  ('RexmoBD – Clothing E-commerce Prototype (Team)', 'Team-built clothing store prototype with shop, orders, admin panel and PHP auth. Deployed on Vercel.', array['HTML', 'CSS', 'JavaScript', 'PHP'], 'https://github.com/abidofficial1/RexmoBD/tree/main', 'https://rexmo-bd.vercel.app', true),
   ('One Percent – Creative Agency', 'Branding, design and digital solutions. Co-founded and lead delivery.', array['Branding', 'Leadership'], '', '', true),
   ('CP Tracker (TODO)', 'Pull Codeforces/VJudge stats. Good weekend build.', array['Next.js', 'API'], '', '', false);
 
