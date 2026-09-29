@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-// field types: text | textarea | number | bool | lines (one per line) | csv (comma separated)
+// field types: text | textarea | number | bool | lines (one per line) | csv (comma separated) | image
 const SCHEMAS = {
   experiences: [
     { k: "role", label: "Role", t: "text" },
@@ -32,6 +32,7 @@ const SCHEMAS = {
   posts: [
     { k: "slug", label: "Slug", t: "text" },
     { k: "title", label: "Title", t: "text" },
+    { k: "image_url", label: "Cover image", t: "image" },
     { k: "body", label: "Body", t: "textarea" }
   ]
 };
@@ -47,6 +48,73 @@ function toForm(schema, row) {
     else f[k] = v ?? "";
   }
   return f;
+}
+
+function ImageField({ value, onChange }) {
+  const [uploading, setUploading] = useState(false);
+  const [err, setErr] = useState("");
+
+  async function upload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setErr("");
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const r = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "Upload failed");
+      onChange(d.url);
+    } catch (e2) {
+      setErr(e2.message);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div>
+      {value ? <img src={value} alt="cover preview" className="admin-preview" /> : null}
+      <input placeholder="Image URL (or upload below)" value={value} onChange={(e) => onChange(e.target.value)} />
+      <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onChange={upload} />
+      {uploading ? <p className="muted">Uploading…</p> : null}
+      {err ? <p className="form-status error">{err}</p> : null}
+    </div>
+  );
+}
+
+function Field({ def, value, onChange }) {
+  const { k, label, t } = def;
+  return (
+    <div>
+      <label className="muted" style={{ fontSize: 13 }}>{label}</label>
+      {t === "textarea" || t === "lines" ? (
+        <textarea rows={t === "lines" ? 4 : 5} value={value} onChange={(e) => onChange(e.target.value)} />
+      ) : t === "bool" ? (
+        <div><input type="checkbox" style={{ width: "auto" }} checked={!!value} onChange={(e) => onChange(e.target.checked)} /> Featured</div>
+      ) : t === "image" ? (
+        <ImageField value={value} onChange={onChange} />
+      ) : (
+        <input type={t === "number" ? "number" : "text"} value={value} onChange={(e) => onChange(e.target.value)} />
+      )}
+    </div>
+  );
+}
+
+function EditForm({ schema, form, setForm, onSave, onCancel, title }) {
+  return (
+    <div className="tile" style={{ marginTop: 12 }}>
+      <strong>{title}</strong>
+      {schema.map((def) => (
+        <Field key={def.k} def={def} value={form[def.k]} onChange={(v) => setForm({ ...form, [def.k]: v })} />
+      ))}
+      <div className="row" style={{ marginTop: 8 }}>
+        <button className="primary" style={{ width: "auto" }} onClick={onSave}>Save</button>
+        <button className="secondary" onClick={onCancel}>Cancel</button>
+      </div>
+    </div>
+  );
 }
 
 function TableEditor({ name }) {
@@ -92,55 +160,22 @@ function TableEditor({ name }) {
       <button className="primary" style={{ width: "auto" }} onClick={() => setEditing({ id: null, form: toForm(schema, {}) })}>+ Add new</button>
       {err ? <p className="form-status error">{err}</p> : null}
       {rows.map((row) => (
-        <div key={row.id} className="tile" style={{ marginTop: 12 }}>
-          <strong>{row.title || row.role || row.category || row.slug || ("#" + row.id)}</strong>
-          <div className="muted" style={{ fontSize: 13 }}>{row.org || row.event || row.period || ""}</div>
-          <div className="row" style={{ marginTop: 8 }}>
-            <button className="secondary" onClick={() => setEditing({ id: row.id, form: toForm(schema, row) })}>Edit</button>
-            <button className="danger" onClick={() => remove(row.id)}>Delete</button>
+        <div key={row.id}>
+          <div className="tile" style={{ marginTop: 12, marginBottom: 0 }}>
+            <strong>{row.title || row.role || row.category || row.slug || ("#" + row.id)}</strong>
+            <div className="muted" style={{ fontSize: 13 }}>{row.org || row.event || row.period || ""}</div>
+            <div className="row" style={{ marginTop: 8 }}>
+              <button className="secondary" onClick={() => setEditing({ id: row.id, form: toForm(schema, row) })}>Edit</button>
+              <button className="danger" onClick={() => remove(row.id)}>Delete</button>
+            </div>
           </div>
           {editing?.id === row.id ? (
-            <div style={{ marginTop: 12 }}>
-              {schema.map(({ k, label, t }) => (
-                <div key={k}>
-                  <label className="muted" style={{ fontSize: 13 }}>{label}</label>
-                  {t === "textarea" || t === "lines" ? (
-                    <textarea rows={t === "lines" ? 4 : 3} value={editing.form[k]} onChange={(e) => setEditing({ ...editing, form: { ...editing.form, [k]: e.target.value } })} />
-                  ) : t === "bool" ? (
-                    <div><input type="checkbox" style={{ width: "auto" }} checked={!!editing.form[k]} onChange={(e) => setEditing({ ...editing, form: { ...editing.form, [k]: e.target.checked } })} /> Featured</div>
-                  ) : (
-                    <input type={t === "number" ? "number" : "text"} value={editing.form[k]} onChange={(e) => setEditing({ ...editing, form: { ...editing.form, [k]: e.target.value } })} />
-                  )}
-                </div>
-              ))}
-              <div className="row" style={{ marginTop: 8 }}>
-                <button className="primary" style={{ width: "auto" }} onClick={save}>Save</button>
-                <button className="secondary" onClick={() => setEditing(null)}>Cancel</button>
-              </div>
-            </div>
+            <EditForm schema={schema} form={editing.form} setForm={(f) => setEditing({ ...editing, form: f })} onSave={save} onCancel={() => setEditing(null)} title="Edit entry" />
           ) : null}
         </div>
       ))}
       {editing && !editing.id ? (
-        <div className="tile" style={{ marginTop: 12 }}>
-          <strong>New entry</strong>
-          {schema.map(({ k, label, t }) => (
-            <div key={k}>
-              <label className="muted" style={{ fontSize: 13 }}>{label}</label>
-              {t === "textarea" || t === "lines" ? (
-                <textarea rows={4} value={editing.form[k]} onChange={(e) => setEditing({ ...editing, form: { ...editing.form, [k]: e.target.value } })} />
-              ) : t === "bool" ? (
-                <div><input type="checkbox" style={{ width: "auto" }} checked={!!editing.form[k]} onChange={(e) => setEditing({ ...editing, form: { ...editing.form, [k]: e.target.checked } })} /> Featured</div>
-              ) : (
-                <input type={t === "number" ? "number" : "text"} value={editing.form[k]} onChange={(e) => setEditing({ ...editing, form: { ...editing.form, [k]: e.target.value } })} />
-              )}
-            </div>
-          ))}
-          <div className="row" style={{ marginTop: 8 }}>
-            <button className="primary" style={{ width: "auto" }} onClick={save}>Save</button>
-            <button className="secondary" onClick={() => setEditing(null)}>Cancel</button>
-          </div>
-        </div>
+        <EditForm schema={schema} form={editing.form} setForm={(f) => setEditing({ ...editing, form: f })} onSave={save} onCancel={() => setEditing(null)} title="New entry" />
       ) : null}
     </div>
   );
@@ -191,14 +226,14 @@ export default function AdminDashboard({ onLogout }) {
   return (
     <div>
       <div className="row" style={{ justifyContent: "space-between" }}>
-        <div className="row">
+        <div className="row tabs">
           {TABS.map((t) => (
             <button key={t} className={tab === t ? "primary" : "secondary"} style={{ width: "auto", textTransform: "capitalize" }} onClick={() => setTab(t)}>{t}</button>
           ))}
         </div>
         <button className="danger" onClick={logout}>Log out</button>
       </div>
-      <p className="muted" style={{ fontSize: 13 }}>Edits save straight to Supabase. Homepage refreshes within ~1 minute.</p>
+      <p className="muted" style={{ fontSize: 13 }}>Edits save straight to Supabase. Homepage and blog refresh within ~1 minute.</p>
       <div style={{ marginTop: 12 }}>
         {tab === "messages" ? <MessagesInbox /> : <TableEditor key={tab} name={tab} />}
       </div>

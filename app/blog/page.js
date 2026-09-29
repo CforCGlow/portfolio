@@ -7,7 +7,7 @@ export const revalidate = 60;
 async function getPosts() {
   try {
     const db = getSupabaseAdmin();
-    const { data, error } = await db.from("posts").select("slug,title,published_at").order("published_at", { ascending: false });
+    const { data, error } = await db.from("posts").select("*").order("published_at", { ascending: false });
     if (error || !data?.length) return null;
     return data;
   } catch {
@@ -37,6 +37,7 @@ export default async function Blog() {
                 <div>
                   <Link href={`/blog/${p.slug}`}><strong>{p.title}</strong></Link>
                   <br /><span className="muted">{p.published_at ? new Date(p.published_at).toLocaleDateString() : ""}</span>
+                  {p.image_url ? <div><img src={p.image_url} alt="" className="blog-thumb" /></div> : null}
                 </div>
               </div>
             ))

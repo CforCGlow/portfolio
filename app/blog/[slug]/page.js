@@ -8,7 +8,7 @@ export const revalidate = 60;
 async function getPost(slug) {
   try {
     const db = getSupabaseAdmin();
-    const { data } = await db.from("posts").select("slug,title,body,published_at").eq("slug", slug).single();
+    const { data } = await db.from("posts").select("*").eq("slug", slug).single();
     return data || null;
   } catch {
     return null;
@@ -26,6 +26,7 @@ export default async function PostPage({ params }) {
           <Link href="/blog" className="muted">← All notes</Link>
           <h1 style={{ letterSpacing: "-1px" }}>{post.title}</h1>
           <p className="muted">{post.published_at ? new Date(post.published_at).toLocaleDateString() : ""}</p>
+          {post.image_url ? <img src={post.image_url} alt="" className="blog-cover" /> : null}
           <p style={{ whiteSpace: "pre-wrap" }}>{post.body}</p>
         </div>
       </div>
