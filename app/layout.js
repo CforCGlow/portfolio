@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
           </div>
         </nav>
         <div className="container">{children}</div>
-        <footer className="footer"><strong>Kazim Akeeb Onik</strong> · Southeast University CSE<br />kazimakeebonik@gmail.com · +8801774445379 · linkedin.com/in/kazim-akeeb-onik</footer>
+        <footer className="footer">© {new Date().getFullYear()} Kazim Akeeb Onik · CSE Undergraduate</footer>
       </body>
     </html>
   );
