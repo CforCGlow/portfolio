@@ -34,7 +34,7 @@ export default async function Blog() {
           <img src="/profile.jpg" alt="Kazim Akeeb Onik" className="avatar lg" />
           <div>
             <strong className="feed-name">Kazim Akeeb Onik</strong>
-            <div className="muted" style={{ fontSize: 13 }}>Notes on AI · CP · research · community</div>
+            <div className="muted" style={{ fontSize: 13 }}>Personal blogs</div>
           </div>
           <span className="badge">Blog</span>
         </div>
