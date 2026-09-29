@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import MatrixBg from "@/components/MatrixBg";
 
 export default function Admin() {
   const [authed, setAuthed] = useState(false);
@@ -23,22 +24,28 @@ export default function Admin() {
 
   if (!authed) {
     return (
-      <div className="card">
+      <main>
+        <MatrixBg />
+        <div className="page-above card">
         <h2>Admin</h2>
         <p className="muted">Enter ADMIN_PASSWORD (starter gate – wire real auth before deploy).</p>
         <form onSubmit={login}>
           <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="Admin password" />
           <button className="primary" type="submit">Unlock</button>
         </form>
-      </div>
+        </div>
+      </main>
     );
   }
 
   return (
-    <div className="card">
-      <h2>Content Overview</h2>
-      <p className="muted">Source: {data?.source} – connect Supabase to edit live. Static fallback lives in lib/data.js</p>
-      <pre style={{ overflow: "auto", fontSize: 12 }}>{JSON.stringify(data, null, 2)?.slice(0, 4000)}</pre>
-    </div>
+    <main>
+      <MatrixBg />
+      <div className="page-above card">
+        <h2>Content Overview</h2>
+        <p className="muted">Source: {data?.source} – connect Supabase to edit live. Static fallback lives in lib/data.js</p>
+        <pre style={{ overflow: "auto", fontSize: 12 }}>{JSON.stringify(data, null, 2)?.slice(0, 4000)}</pre>
+      </div>
+    </main>
   );
 }

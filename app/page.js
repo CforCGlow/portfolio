@@ -1,5 +1,6 @@
 import { profile, experiences, volunteering, skills, projects } from "@/lib/data";
 import ContactForm from "@/components/ContactForm";
+import TypingRoles from "@/components/TypingRoles";
 
 export default function Home() {
   return (
@@ -8,8 +9,9 @@ export default function Home() {
         <div>
           <span className="eyebrow"><span className="dot" /> Open to internships · Dhaka, Bangladesh</span>
           <h1>Kazim Akeeb <span className="grad">Onik</span></h1>
-          <p className="lead"><strong style={{ color: "#fff" }}>{profile.title}</strong></p>
+          <p className="lead role-line"><strong style={{ color: "#fff" }}>{profile.title}</strong></p>
           <p className="lead">{profile.bio}</p>
+          <p className="lead typing-line"><span style={{ color: "#fff" }}>▸ Exploring:</span> <TypingRoles /></p>
           <p className="lead" style={{ fontSize: 14 }}>{profile.university} · {profile.degree}</p>
           <div className="cta">
             <a className="btn-primary" href="/resume.pdf">Download CV ↓</a>
