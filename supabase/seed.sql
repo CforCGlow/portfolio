@@ -36,7 +36,7 @@ insert into achievements (title, org, year, description) values
   ('LaTeX Unlocked: Research Writing Workshop', 'IEEE CS SEU SB', '', 'Participant');
 
 insert into skills (category, items) values
-  ('Programming', array['C', 'C++', 'Java', 'Python']),
+  ('Programming', array['C', 'C++', 'Java', 'Python', 'HTML', 'CSS', 'JavaScript', 'PHP']),
   ('Research', array['LaTeX']),
   ('Design', array['Illustrator', 'Photoshop', 'Canva']),
   ('Professional', array['Entrepreneurship', 'Event Management', 'Public Relations', 'Team Leadership', 'Communication']),
