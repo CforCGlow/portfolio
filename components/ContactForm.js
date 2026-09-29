@@ -3,11 +3,11 @@ import { useState } from "react";
 
 export default function ContactForm() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState({ type: "", text: "" });
 
   async function submit(e) {
     e.preventDefault();
-    setStatus("Sending...");
+    setStatus({ type: "", text: "Sending..." });
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
@@ -16,10 +16,10 @@ export default function ContactForm() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed");
-      setStatus("Message sent! I will reply soon.");
+      setStatus({ type: "success", text: "Message sent successfully. Thank you for reaching out — I'll get back to you soon." });
       setForm({ name: "", email: "", message: "" });
     } catch (err) {
-      setStatus("Error: " + err.message);
+      setStatus({ type: "error", text: "Something went wrong: " + err.message + ". Please try again or email me directly." });
     }
   }
 
@@ -29,7 +29,7 @@ export default function ContactForm() {
       <input placeholder="Your email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
       <textarea placeholder="Message" rows={4} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} required />
       <button className="primary" type="submit">Send Message</button>
-      {status ? <p className="muted">{status}</p> : null}
+      {status.text ? <p className={`form-status ${status.type}`}>{status.text}</p> : null}
     </form>
   );
 }
