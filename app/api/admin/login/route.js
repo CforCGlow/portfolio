@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { adminToken, isAuthed } from "@/lib/admin-auth";
+import { adminToken, isAuthed, safeEqual } from "@/lib/admin-auth";
 import { rateLimit, resetRateLimit } from "@/lib/rate-limit";
 
 function clientIp(req) {
@@ -21,7 +21,7 @@ export async function POST(req) {
     const { password } = await req.json();
     const token = adminToken();
     if (!token) return NextResponse.json({ error: "ADMIN_PASSWORD not set on server" }, { status: 500 });
-    if (password !== process.env.ADMIN_PASSWORD) {
+    if (!safeEqual(password, process.env.ADMIN_PASSWORD)) {
       return NextResponse.json({ error: "Wrong password" }, { status: 401 });
     }
     resetRateLimit("login:" + ip);

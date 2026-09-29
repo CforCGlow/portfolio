@@ -117,15 +117,21 @@ function EditForm({ schema, form, setForm, onSave, onCancel, title }) {
   );
 }
 
-function TableEditor({ name }) {
+function TableEditor({ name, onAuthFail }) {
   const schema = SCHEMAS[name];
   const [rows, setRows] = useState(null);
   const [editing, setEditing] = useState(null); // {id?, form}
   const [err, setErr] = useState("");
 
+  function checkAuth(r) {
+    if (r.status === 401) { onAuthFail(); return false; }
+    return true;
+  }
+
   async function load() {
     setErr("");
     const r = await fetch(`/api/admin/table?name=${name}`);
+    if (!checkAuth(r)) return;
     const d = await r.json();
     if (!r.ok) setErr(d.error || "Failed to load");
     else setRows(d.rows);
@@ -140,6 +146,7 @@ function TableEditor({ name }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, id: editing.id, row: editing.form })
     });
+    if (!checkAuth(r)) return;
     const d = await r.json();
     if (!r.ok) { setErr(d.error || "Save failed"); return; }
     setEditing(null);
@@ -149,6 +156,7 @@ function TableEditor({ name }) {
   async function remove(id) {
     if (!confirm("Delete this entry?")) return;
     const r = await fetch(`/api/admin/table?name=${name}&id=${id}`, { method: "DELETE" });
+    if (!checkAuth(r)) return;
     if (!r.ok) { const d = await r.json(); setErr(d.error || "Delete failed"); return; }
     load();
   }
@@ -181,12 +189,13 @@ function TableEditor({ name }) {
   );
 }
 
-function MessagesInbox() {
+function MessagesInbox({ onAuthFail }) {
   const [rows, setRows] = useState(null);
   const [err, setErr] = useState("");
 
   async function load() {
     const r = await fetch("/api/admin/messages");
+    if (r.status === 401) { onAuthFail(); return; }
     const d = await r.json();
     if (!r.ok) setErr(d.error || "Failed");
     else setRows(d.rows);
@@ -195,7 +204,8 @@ function MessagesInbox() {
 
   async function remove(id) {
     if (!confirm("Delete this message?")) return;
-    await fetch(`/api/admin/messages?id=${id}`, { method: "DELETE" });
+    const r = await fetch(`/api/admin/messages?id=${id}`, { method: "DELETE" });
+    if (r.status === 401) { onAuthFail(); return; }
     load();
   }
 
@@ -225,17 +235,18 @@ export default function AdminDashboard({ onLogout }) {
 
   return (
     <div>
-      <div className="row" style={{ justifyContent: "space-between" }}>
-        <div className="row tabs">
-          {TABS.map((t) => (
-            <button key={t} className={tab === t ? "primary" : "secondary"} style={{ width: "auto", textTransform: "capitalize" }} onClick={() => setTab(t)}>{t}</button>
-          ))}
-        </div>
+      <div className="admin-bar">
+        <span className="admin-badge"><span className="dot-live" /> Admin session</span>
         <button className="danger" onClick={logout}>Log out</button>
+      </div>
+      <div className="row tabs">
+        {TABS.map((t) => (
+          <button key={t} className={tab === t ? "primary" : "secondary"} style={{ width: "auto", textTransform: "capitalize" }} onClick={() => setTab(t)}>{t}</button>
+        ))}
       </div>
       <p className="muted" style={{ fontSize: 13 }}>Edits save straight to Supabase. Homepage and blog refresh within ~1 minute.</p>
       <div style={{ marginTop: 12 }}>
-        {tab === "messages" ? <MessagesInbox /> : <TableEditor key={tab} name={tab} />}
+        {tab === "messages" ? <MessagesInbox onAuthFail={onLogout} /> : <TableEditor key={tab} name={tab} onAuthFail={onLogout} />}
       </div>
     </div>
   );
