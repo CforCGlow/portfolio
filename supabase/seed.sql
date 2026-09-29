@@ -20,6 +20,7 @@ insert into experiences (role, org, period, bullets, sort_order) values
   ('Executive Member', 'Southeast Computer Club (SEUCC)', 'Jan 2025 – Jun 2025', array['Planned and executed academic and technical events'], 2),
   ('Sub-Executive Member', 'IEEE Computer Society SEU Student Branch Chapter', '2025', array['Organized workshops, seminars, professional programs', 'Promoted IEEE initiatives at SEU'], 3),
   ('Assistant Head of Public Relations', 'SEUCC', '2024', array['Led promotional campaigns, managed public communication'], 4),
+  ('Founder & Team Manager', 'Football Club of Southeast University (CSE 65)', '2023 – Present', array['Founded and manage the CSE Batch 65 football team', 'Handle squad, fixtures, and match-day operations'], 2),
   ('Child Researcher', 'National Children''s Task Force (NCTF), Manikganj', '2017', array['Child-centered research, data collection and reporting'], 5);
 
 insert into volunteering (role, event, org, impact, bullets) values
