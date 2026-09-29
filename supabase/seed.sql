@@ -14,6 +14,8 @@ insert into profile (name, title, bio, email, phone, location, photo_url, resume
 );
 
 insert into experiences (role, org, period, bullets, sort_order) values
+  ('Vice Chairperson', 'IEEE Computer Society SEU Student Branch Chapter', '2026 – Present', array['Lead chapter strategy, programs, and student engagement', 'Coordinate with IEEE CS Bangladesh Chapter initiatives'], 0),
+  ('Graphic Designer', 'IEEE CS BDC Team Spark', '2026 – Present', array['Design branding and promotional visuals for national IEEE CS programs'], 0),
   ('Managing Director & Co-Founder', 'One Percent', '2025 – Present', array['Founded creative agency for branding, design, digital solutions', 'Lead creative + technical teams, client relations, operations', 'Drive marketing strategy and business growth'], 1),
   ('Executive Member', 'Southeast Computer Club (SEUCC)', 'Jan 2025 – Jun 2025', array['Planned and executed academic and technical events'], 2),
   ('Sub-Executive Member', 'IEEE Computer Society SEU Student Branch Chapter', '2025', array['Organized workshops, seminars, professional programs', 'Promoted IEEE initiatives at SEU'], 3),

@@ -10,14 +10,15 @@ export default function Home() {
           <h1>Kazim Akeeb <span className="grad">Onik</span></h1>
           <p className="lead"><strong style={{ color: "#fff" }}>{profile.title}</strong></p>
           <p className="lead">{profile.bio}</p>
-          <p className="lead" style={{ fontSize: 14 }}>{profile.university} · {profile.degree} · CGPA {profile.cgpa}</p>
+          <p className="lead" style={{ fontSize: 14 }}>{profile.university} · {profile.degree}</p>
           <div className="cta">
             <a className="btn-primary" href="/resume.pdf">Download CV ↓</a>
             <a className="btn-ghost" href="#contact">Contact Me</a>
             <a className="btn-ghost" href={profile.socials.linkedin} target="_blank">LinkedIn ↗</a>
+            <a className="btn-ghost" href="https://www.facebook.com/cglow17" target="_blank">Facebook ↗</a>
           </div>
           <div className="stats">
-            <div className="stat"><strong>3.81</strong><br /><span>CGPA / 4.00</span></div>
+            <div className="stat"><strong>Vice Chair</strong><br /><span>IEEE CS SEU SBC</span></div>
             <div className="stat"><strong>500+</strong><br /><span>Event participants</span></div>
             <div className="stat"><strong>5+</strong><br /><span>Leadership roles</span></div>
             <div className="stat"><strong>ICPC</strong><br /><span>2024 Preliminary</span></div>
