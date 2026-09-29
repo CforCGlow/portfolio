@@ -1,8 +1,11 @@
-import { profile, experiences, volunteering, skills, projects } from "@/lib/data";
+import { getSiteContent } from "@/lib/content";
 import ContactForm from "@/components/ContactForm";
 import TypingRoles from "@/components/TypingRoles";
 
-export default function Home() {
+export const revalidate = 60;
+
+export default async function Home() {
+  const { profile, experiences, volunteering, skills, projects } = await getSiteContent();
   return (
     <main>
       <section className="hero">
